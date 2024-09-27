@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+{% block body_class %}template-homepage{% endblock %}
+{% block content %}
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+
+    {{ page.body|richtext }}
+    <div class="grid">
+        <div class="grid-sizer"></div>
+        {% for child_page in page.get_children %}
+            {% with child_page.specific as specific_child_page %}
+                <a href="{% pageurl specific_child_page %}">
+                    <div class="grid-item">
+                        <img src="{{ specific_child_page.image.file.url }}" alt="{{ specific_child_page.title }}"></img>
+                    </div>
+                </a>
+            {% endwith %}
+        {% endfor %}
+    </div>
+{% endblock %}
