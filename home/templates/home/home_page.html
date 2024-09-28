@@ -3,11 +3,29 @@
 {% load wagtailcore_tags shuffle %}
 {% block body_class %}template-homepage{% endblock %}
 {% block content %}
+    <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // init Masonry
+            var grid = document.querySelector('.grid');
+            var msnry = new Masonry(grid, {
+                itemSelector: '.grid-item',
                 columnWidth: 200,
                 gutter: 4,
                 fitWidth: true,
             });
+
+            // layout Masonry after each image loads
+            imagesLoaded(grid).on('progress', function() {
+                msnry.layout();
+            });
+
+            window.addEventListener('resize', function() {
+                msnry.reloadItems();
+            });
+        });
+    </script>
 
     {{ page.body|richtext }}
     <div class="grid">
