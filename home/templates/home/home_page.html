@@ -4,6 +4,10 @@
 {% block body_class %}template-homepage{% endblock %}
 {% block content %}
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+                columnWidth: 200,
+                gutter: 4,
+                fitWidth: true,
+            });
 
     {{ page.body|richtext }}
     <div class="grid">
