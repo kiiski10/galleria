@@ -17,3 +17,13 @@ body {
 .grid-item img {
   width: 100%;
 }
+
+.image-wrapper {
+  text-align: center;
+}
+
+.image {
+  max-width: 100vw;
+  max-height: 80vh;
+  margin: auto;
+}
