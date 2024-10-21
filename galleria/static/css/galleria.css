@@ -27,3 +27,11 @@ body {
   max-height: 80vh;
   margin: auto;
 }
+
+/* Embedded youtube videos */
+iframe {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: 100%;
+}
+
