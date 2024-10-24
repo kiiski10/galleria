@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
 {% load wagtailcore_tags shuffle %}
+{% load static %}
+
 {% block body_class %}template-homepage{% endblock %}
 {% block content %}
-    <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
-    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script src="{% static 'home/js/imagesloaded.min.js' %}"></script>
+    <script src="{% static 'home/js/masonry.min.js' %}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // init Masonry
