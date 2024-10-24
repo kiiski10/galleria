@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     "taggit",
     "django.contrib.admin",
     "django.contrib.auth",
+    "wagtail_2fa",
+    'django_otp',
+    'django_otp.plugins.otp_totp',
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
@@ -52,6 +55,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    'wagtail_2fa.middleware.VerifyUserMiddleware',
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -189,3 +193,5 @@ WAGTAILDOCS_EXTENSIONS = [
     "xlsx",
     "zip",
 ]
+
+WAGTAIL_2FA_REQUIRED = True
