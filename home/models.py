@@ -10,6 +10,13 @@ class HomePage(Page):
         FieldPanel('body'),
     ]
 
+    def get_context(self, request):
+        context = super(HomePage, self).get_context(request)
+        context["published_image_pages"] = (
+            ImagePage.objects.live()
+        )
+        return context
+
 
 class ImagePage(Page):
     image = models.ForeignKey(
