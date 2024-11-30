@@ -2,6 +2,7 @@
 from django.core.files.base import ContentFile
 from django.db import models
 from PIL import Image as PilImage
+from urllib import parse
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import RichTextField
 from wagtail.images.models import Image
@@ -34,6 +35,11 @@ class ImagePage(Page):
     )
     body = RichTextField(blank=True)
 
+    thumbnail_image_id = models.CharField(
+        max_length=50,
+        blank=True,
+    )
+
     content_panels = Page.content_panels + [
         FieldPanel('image'),
         FieldPanel('body'),
@@ -41,36 +47,43 @@ class ImagePage(Page):
 
     def get_youtube_video_id(self):
         video_url = self.body.split("url=\"")[1].split("\"")[0]
-        video_id = video_url.split("/")[-1]
-        if "&" in video_id:
-            video_id = video_id.split("&")[0]
-        if "?t=" in video_id:
-            video_id = video_id.split("?t=")[0]
-        if "?v=" in video_id:
-            video_id = video_id.split("?v=")[1]
+        query_params = parse.parse_qs(
+            parse.urlparse(video_url).query
+        )
+        video_id = query_params["v"][0]
         return video_id
 
     def save(self, clean=True, user=None, log_action=False, **kwargs):
-        youtube_urls = [
-            "url=\"https://www.youtube",
-            "url=\"https://youtube",
-            "url=\"https://www.youtu.be",
-            "url=\"https://youtu.be",
-        ]
-        has_embedded_content = "<embed embedtype=\"media\"" in self.body
-        embedded_content_is_youtube_video = any(x in self.body for x in youtube_urls)
+        if clean:
+            youtube_urls = [
+                "url=\"https://www.youtube",
+                "url=\"https://youtube",
+                "url=\"https://www.youtu.be",
+                "url=\"https://youtu.be",
+            ]
+            has_embedded_content = "<embed embedtype=\"media\"" in self.body
+            embedded_content_is_youtube_video = any(x in self.body for x in youtube_urls)
 
-        if has_embedded_content and embedded_content_is_youtube_video:
-            video_id = self.get_youtube_video_id()
-            thumbnail_url = f"http://img.youtube.com/vi/%s/0.jpg" % video_id
-            thumbnail_image = PilImage.open(requests.get(thumbnail_url, stream=True).raw)
-            image_io = io.BytesIO()
-            thumbnail_image.save(image_io, format='JPEG')
-            image_io.seek(0)
-            self.image = Image.objects.create(
-                title=self.title,
-                file=ContentFile(image_io.read(), name=f"{self.title}.jpg"),
-            )
+            if has_embedded_content and embedded_content_is_youtube_video:
+                video_id = self.get_youtube_video_id()
+                thumbnail_title = f"youtube_thumbnail_%s" % video_id
+                thumbnail_exists = Image.objects.filter(title=thumbnail_title).exists()
+
+                if thumbnail_exists:
+                    self.image = Image.objects.get(title=thumbnail_title)
+                else:
+                    thumbnail_url = f"http://img.youtube.com/vi/%s/0.jpg" % video_id
+                    thumbnail_image = PilImage.open(requests.get(thumbnail_url, stream=True).raw)
+                    image_io = io.BytesIO()
+                    thumbnail_image.save(image_io, format='JPEG')
+                    image_io.seek(0)
+                    if self.image:
+                        old_image = self.image
+                        self.image = None
+                        old_image.delete()
+                    self.image = Image.objects.create(
+                        title=thumbnail_title,
+                        file=ContentFile(image_io.read(), name=f"{self.title}.jpg"),
+                    )
+                    self.thumbnail_image_id = video_id
         super().save(clean, user, log_action, **kwargs)
-
-
