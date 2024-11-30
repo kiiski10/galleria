@@ -35,11 +35,6 @@ class ImagePage(Page):
     )
     body = RichTextField(blank=True)
 
-    thumbnail_image_id = models.CharField(
-        max_length=50,
-        blank=True,
-    )
-
     content_panels = Page.content_panels + [
         FieldPanel('image'),
         FieldPanel('body'),
@@ -85,5 +80,4 @@ class ImagePage(Page):
                         title=thumbnail_title,
                         file=ContentFile(image_io.read(), name=f"{self.title}.jpg"),
                     )
-                    self.thumbnail_image_id = video_id
         super().save(clean, user, log_action, **kwargs)
