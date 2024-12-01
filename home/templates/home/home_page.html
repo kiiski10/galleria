@@ -10,10 +10,10 @@
     <script src="{% static 'home/js/image_layout.js' %}"></script>
     {{ page.body|richtext }}
     <div class="grid">
-        {% for image_page in published_image_pages %}
-            <a href="{% pageurl image_page %}">
+        {% for i in images_and_thumbnails %}
+            <a href="{% pageurl i.page %}">
                 <div class="grid-item">
-                    <img src="{{ image_page.image.file.url }}" alt="{{ i.title }}"></img>
+                    <img src="{{ i.thumbnail.file.url }}" alt="{{ i.page.title }}"></img>
                 </div>
             </a>
         {% endfor %}

@@ -19,14 +19,26 @@ class HomePage(Page):
 
     def get_context(self, request):
         context = super(HomePage, self).get_context(request)
-        context["published_image_pages"] = (
-            ImagePage.objects.live()
-        )
+        published_image_pages = ImagePage.objects.live()
+        context["images_and_thumbnails"] = []
+
+        for i in published_image_pages:
+            if i.image:
+                context["images_and_thumbnails"].append({"page": i, "thumbnail": i.image})
+            elif i.thumbnail_image:
+                context["images_and_thumbnails"].append({"page": i, "thumbnail": i.thumbnail_image})
         return context
 
 
 class ImagePage(Page):
     image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+    thumbnail_image = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
         blank=True,
@@ -65,18 +77,18 @@ class ImagePage(Page):
                 thumbnail_exists = Image.objects.filter(title=thumbnail_title).exists()
 
                 if thumbnail_exists:
-                    self.image = Image.objects.get(title=thumbnail_title)
+                    self.thumbnail_image = Image.objects.get(title=thumbnail_title)
                 else:
                     thumbnail_url = f"http://img.youtube.com/vi/%s/0.jpg" % video_id
                     thumbnail_image = PilImage.open(requests.get(thumbnail_url, stream=True).raw)
                     image_io = io.BytesIO()
                     thumbnail_image.save(image_io, format='JPEG')
                     image_io.seek(0)
-                    if self.image:
-                        old_image = self.image
-                        self.image = None
+                    if self.thumbnail_image:
+                        old_image = self.thumbnail_image
+                        self.thumbnail_image = None
                         old_image.delete()
-                    self.image = Image.objects.create(
+                    self.thumbnail_image = Image.objects.create(
                         title=thumbnail_title,
                         file=ContentFile(image_io.read(), name=f"{self.title}.jpg"),
                     )
