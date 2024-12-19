@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags shuffle %}
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
 {% load static %}
 
 {% block body_class %}template-homepage{% endblock %}
@@ -13,7 +14,7 @@
         {% for i in images_and_thumbnails %}
             <a href="{% pageurl i.page %}">
                 <div class="grid-item">
-                    <img src="{{ i.thumbnail.file.url }}" alt="{{ i.page.title }}"></img>
+                    {% image i.thumbnail width-200 %}
                 </div>
             </a>
         {% endfor %}
