@@ -10,12 +10,15 @@ def get_global_admin_js():
         window.addEventListener('DOMContentLoaded', function () {
             document.addEventListener('wagtail:images-upload', function(event) {
                 const now  = new Date();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, "0");
                 date_string = [
-                    now.getDate(), ".",
-                    now.getMonth(), ".",
+                    day, ".",
+                    month, ".",
                     now.getFullYear(), " ",
                     now.getHours(), ":",
-                    now.getMinutes()
+                    minutes
                 ].join('');
 
                 event.detail.data.title = date_string;
