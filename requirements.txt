@@ -1,3 +1,4 @@
+django-bootstrap5==24.3
 Django>=4.2,<5.1
 wagtail>=6.2.2,<6.3
 wagtail-2fa==1.6.9

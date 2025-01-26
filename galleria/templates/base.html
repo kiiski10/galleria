@@ -1,11 +1,12 @@
 {% load static wagtailcore_tags wagtailuserbar %}
+{% load django_bootstrap5 %}
 
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <script src="{% static 'home/bootstrap/js/jquery.min.js' %}"></script>
-        <script src="{% static 'home/bootstrap/js/bootstrap.min.js' %}"></script>
-        <link href="{% static 'home/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
         <meta charset="utf-8" />
         <title>
             {% block title %}
