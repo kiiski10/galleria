@@ -7,18 +7,18 @@ def remove_initial_wagtail_data(apps, schema_editor):
     Page = apps.get_model("wagtailcore.Page")
     Site = apps.get_model("wagtailcore.Site")
 
-    root_page = Page.objects.get(
-        title="Root",
-        slug="root",
-        path="0001",
-        numchild=1,
-        url_path="/",
-    )
-
-    content_type = ContentType.objects.filter(
-        model="page",
-        app_label="wagtailcore"
-    )
+    try:
+        root_page = Page.objects.get(
+            pk=1,
+            title="Root",
+            slug="root",
+            path="0001",
+            numchild=1,
+            url_path="/",
+        )
+    except Page.DoesNotExist:
+        # no page with title "Root" exists, so we can't continue
+        return
 
     homepage = Page.objects.get(
         title="Welcome to your new Wagtail site!",
