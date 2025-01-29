@@ -17,7 +17,6 @@ def remove_initial_wagtail_data(apps, schema_editor):
             url_path="/",
         )
     except Page.DoesNotExist:
-        # no page with title "Root" exists, so we can't continue
         return
 
     homepage = Page.objects.get(
@@ -28,8 +27,8 @@ def remove_initial_wagtail_data(apps, schema_editor):
     )
 
     site = Site.objects.get(
+        pk=1,
         hostname="localhost",
-        root_page=root_page,
         is_default_site=True,
     )
 
