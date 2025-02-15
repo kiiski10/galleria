@@ -2,8 +2,8 @@
 
 from django.db import migrations
 
-def remove_initial_wagtail_data(apps, schema_editor):
-    ContentType = apps.get_model("contenttypes.ContentType")
+
+def replace_initial_wagtail_data(apps, schema_editor):
     Page = apps.get_model("wagtailcore.Page")
     Site = apps.get_model("wagtailcore.Site")
 
@@ -32,9 +32,13 @@ def remove_initial_wagtail_data(apps, schema_editor):
         is_default_site=True,
     )
 
-    homepage.delete()
-    root_page.delete()
-    site.delete()
+    homepage.title = "Content will be here soon"
+    root_page.title = "Juurisivu"
+    site.hostname = "localhost"
+
+    homepage.save()
+    root_page.save()
+    site.save()
 
 
 class Migration(migrations.Migration):
@@ -42,5 +46,5 @@ class Migration(migrations.Migration):
         ("home", "0004_imagepage_thumbnail_image"),
     ]
     operations = [
-        migrations.RunPython(remove_initial_wagtail_data),
+        migrations.RunPython(replace_initial_wagtail_data),
     ]
