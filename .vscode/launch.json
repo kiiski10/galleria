@@ -24,6 +24,16 @@
             "args": [
                 "migrate",
             ]
+        },
+        {
+            "name": "Initial data",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "console": "integratedTerminal",
+            "args": [
+                "initial-data",
+            ]
         }
     ]
 }
