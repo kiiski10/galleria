@@ -10,7 +10,6 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         try:
             root_page = Page.objects.get(pk=1)
-            print("Root page found:", root_page)
 
             homepage = Page.objects.get(
                 title="Welcome to your new Wagtail site!",
@@ -18,13 +17,11 @@ class Command(BaseCommand):
                 path="00010001",
                 depth=2,
             )
-            print("Homepage found:", homepage)
 
             site = Site.objects.get(
                 pk=1,
                 is_default_site=True,
             )
-            print("Site found:", site)
 
             homepage.delete()
 
@@ -37,11 +34,9 @@ class Command(BaseCommand):
 
             # Add the new HomePage as a child of the root_page
             root = Page.get_first_root_node()
-            print("Root node found:", root)
             root.add_child(instance=new_homepage)
             new_homepage.save()
             site.root_page = new_homepage
-            # Update the Site to use the new HomePage
             site.save()
 
         except (Page.DoesNotExist, Site.DoesNotExist, HomePage.DoesNotExist) as e:
