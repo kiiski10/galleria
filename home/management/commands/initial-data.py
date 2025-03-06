@@ -9,8 +9,6 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args, **kwargs):
         try:
-            root_page = Page.objects.get(pk=1)
-
             homepage = Page.objects.get(
                 title="Welcome to your new Wagtail site!",
                 slug="home",
