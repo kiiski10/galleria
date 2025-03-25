@@ -19,7 +19,7 @@ class HomePage(Page):
 
     def get_context(self, request):
         context = super(HomePage, self).get_context(request)
-        published_image_pages = ImagePage.objects.live()
+        published_image_pages = ImagePage.objects.live().order_by("path")
         context["images_and_thumbnails"] = []
 
         for i in published_image_pages:
@@ -51,6 +51,18 @@ class ImagePage(Page):
         FieldPanel('image'),
         FieldPanel('body'),
     ]
+
+    def get_context(self, request):
+        context = super(ImagePage, self).get_context(request)
+
+        all_image_pages = list(ImagePage.objects.live().order_by("path"))
+        current_index = all_image_pages.index(self)
+        next_page = all_image_pages[current_index + 1].url if current_index + 1 < len(all_image_pages) else None
+        previous_page = all_image_pages[current_index - 1].url if current_index - 1 >= 0 else None
+
+        context["next_page"] = next_page
+        context["previous_page"] = previous_page
+        return context
 
     def get_youtube_video_id(self):
         video_url = self.body.split("url=\"")[1].split("\"")[0]
