@@ -13,7 +13,6 @@ body {
 
 .image-content {
   position: relative;
-  text-align: center;
   margin-top: 25px;
   margin-bottom: 5px;
 }
@@ -49,7 +48,6 @@ body {
 }
 
 .text-content {
-  margin: 25px;
   margin-top: 40px;
 }
 
