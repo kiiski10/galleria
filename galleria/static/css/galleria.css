@@ -26,6 +26,8 @@ body {
 .previous_page_button,
 .next_page_button {
   height: 100%;
+  top:50%;
+  transform: translateY(-50%);
   width:45%;
   position: absolute;
   padding: 50% 0;
